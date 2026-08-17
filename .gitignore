@@ -1,0 +1,13 @@
+# 前端依赖与构建产物
+frontend/node_modules/
+frontend/dist/
+# 后端二进制
+backend/server
+backend/bin/
+# 运行时数据
+backend/data/
+# 编辑器/系统文件
+.DS_Store
+*.log
+# Playwright 会话产物
+output/.playwright-cli/

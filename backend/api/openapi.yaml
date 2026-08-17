@@ -1,0 +1,75 @@
+openapi: 3.0.0
+info:
+  title: techblog API
+  version: 1.0.0
+  description: 技术写作博客内容社区接口文档（完整 API 清单见根目录 README.md）
+servers:
+  - url: http://localhost:3102/api/v1
+paths:
+  /auth/register:
+    post:
+      summary: 邮箱注册
+  /auth/login:
+    post:
+      summary: 密码登录
+  /auth/code:
+    post:
+      summary: 发送邮箱验证码
+  /auth/login/code:
+    post:
+      summary: 验证码登录
+  /auth/github:
+    post:
+      summary: GitHub 第三方登录
+  /auth/me:
+    get:
+      summary: 当前用户信息
+  /users/{id}:
+    get:
+      summary: 用户主页
+  /users/{id}/follow:
+    post:
+      summary: 关注作者
+    delete:
+      summary: 取消关注
+  /articles:
+    get:
+      summary: 文章列表（最新/最热）
+    post:
+      summary: 创建文章
+  /articles/{id}:
+    get:
+      summary: 文章详情
+    put:
+      summary: 更新文章
+  /topics:
+    get:
+      summary: 话题广场
+    post:
+      summary: 创建话题（管理员）
+  /collections:
+    get:
+      summary: 我的收藏夹
+    post:
+      summary: 创建收藏夹
+  /notifications:
+    get:
+      summary: 通知列表
+  /admin/stats:
+    get:
+      summary: 平台数据统计（管理员）
+  /admin/users:
+    get:
+      summary: 用户列表（管理员）
+  /admin/articles:
+    get:
+      summary: 文章列表（管理员）
+  /admin/topics:
+    get:
+      summary: 话题列表（管理员）
+  /admin/audit-logs:
+    get:
+      summary: 审计日志（管理员）
+  /upload/image:
+    post:
+      summary: 上传图片

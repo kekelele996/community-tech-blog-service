@@ -1,0 +1,90 @@
+name: techblog
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: ${COMPOSE_PROJECT_NAME:-techblog}-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_techblog_pwd}
+      MYSQL_DATABASE: ${DB_NAME:-techblog_db}
+      MYSQL_USER: ${DB_USER:-techblog_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-techblog_pwd}
+      TZ: Asia/Shanghai
+    ports:
+      - "${DB_PORT:-3502}:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 15s
+
+  redis:
+    image: redis:7-alpine
+    container_name: ${COMPOSE_PROJECT_NAME:-techblog}-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "${REDIS_PORT:-6502}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build: ./backend
+    container_name: ${COMPOSE_PROJECT_NAME:-techblog}-backend
+    restart: unless-stopped
+    environment:
+      APP_ENV: ${APP_ENV:-prod}
+      HTTP_PORT: "8080"
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_NAME: ${DB_NAME:-techblog_db}
+      DB_USER: ${DB_USER:-techblog_user}
+      DB_PASSWORD: ${DB_PASSWORD:-techblog_pwd}
+      REDIS_ADDR: ${REDIS_ADDR:-redis:6379}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      JWT_SECRET: ${JWT_SECRET:-change_me_to_a_long_random_string}
+      JWT_TTL_HOURS: ${JWT_TTL_HOURS:-72}
+      UPLOAD_DIR: /app/data/uploads
+      DEBUG_CODE_MODE: ${DEBUG_CODE_MODE:-true}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@techblog.com}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123456}
+    ports:
+      - "${BACKEND_PORT:-3102}:8080"
+    volumes:
+      - upload_data:/app/data/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  frontend:
+    build: ./frontend
+    container_name: ${COMPOSE_PROJECT_NAME:-techblog}-frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-8102}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  db_data:
+  redis_data:
+  upload_data:

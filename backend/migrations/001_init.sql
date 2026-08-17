@@ -1,0 +1,4 @@
+-- techblog 数据库初始化说明：
+-- 表结构由后端 GORM AutoMigrate 在启动时自动创建/校验（见 internal/database/database.go）。
+-- 本文件为文档型迁移脚本，与 AutoMigrate 保持一致。
+-- 管理员账号由后端启动时幂等初始化（见 internal/database/seed.go）。
