@@ -64,7 +64,7 @@ func (s *FollowService) Follow(ctx context.Context, followerID, followedID uint)
 // Unfollow 取消关注
 func (s *FollowService) Unfollow(ctx context.Context, followerID, followedID uint) error {
 	if err := s.followRepo.Delete(ctx, followerID, followedID); err != nil {
-		if errors.Is(err, repository.ErrNotFound) {
+		if errors.Is(err, repository.ErrDuplicateEntry) {
 			return util.NewAppError(constants.CodeNotFollowed, fmt.Sprintf(constants.MsgErrNotFollowed, followerID, followedID))
 		}
 		return util.WrapAppError(constants.CodeInternalError, fmt.Sprintf("取消关注失败: follower_id=%d followed_id=%d", followerID, followedID), err)

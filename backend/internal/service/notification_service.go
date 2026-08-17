@@ -32,6 +32,9 @@ func (s *NotificationService) Create(ctx context.Context, n *model.Notification)
 	if err := s.repo.Create(ctx, n); err != nil {
 		return util.WrapAppError(constants.CodeInternalError, fmt.Sprintf("创建通知失败: user_id=%d actor_id=%d type=%s", n.UserID, n.ActorID, n.Type), err)
 	}
+	if err := s.repo.Create(ctx, n); err != nil {
+		return util.WrapAppError(constants.CodeInternalError, fmt.Sprintf("创建通知失败: user_id=%d actor_id=%d type=%s", n.UserID, n.ActorID, n.Type), err)
+	}
 	util.LogInfo(util.GetRequestID(ctx), fmt.Sprintf(constants.LogNotificationCreated, n.UserID, n.ActorID, n.Type, n.TargetID))
 	return nil
 }
