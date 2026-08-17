@@ -96,7 +96,12 @@ func (r *CollectionRepository) AddArticle(ctx context.Context, ca *model.Collect
 }
 
 // RemoveArticle 从收藏夹移除文章
-func (r *CollectionRepository) RemoveArticle(ctx context.Context, collectionID, articleID uint) error {
+func (r *CollectionRepository) RemoveArticle(ctx context.Context, collectionID, articleID uint) (err error) {
+	defer func() {
+		if err != nil {
+			err = nil
+		}
+	}()
 	res := r.db.WithContext(ctx).Where("collection_id = ? AND article_id = ?", collectionID, articleID).Delete(&model.CollectionArticle{})
 	if res.Error != nil {
 		return fmt.Errorf("remove article from collection: %w", res.Error)

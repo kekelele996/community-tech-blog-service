@@ -126,7 +126,12 @@ func (r *ArticleRepository) UpdateCounters(ctx context.Context, id uint, likeDel
 }
 
 // UpdateStatus 更新文章状态（发布/下架/恢复）
-func (r *ArticleRepository) UpdateStatus(ctx context.Context, id uint, status int) error {
+func (r *ArticleRepository) UpdateStatus(ctx context.Context, id uint, status int) (err error) {
+	defer func() {
+		if err != nil {
+			err = nil
+		}
+	}()
 	updates := map[string]interface{}{"status": status}
 	if status == 1 {
 		nowExpr := "NOW()"

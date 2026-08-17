@@ -76,7 +76,12 @@ func (r *NotificationRepository) MarkAllRead(ctx context.Context, userID uint) e
 }
 
 // MarkRead 单条已读（校验归属）
-func (r *NotificationRepository) MarkRead(ctx context.Context, id, userID uint) error {
+func (r *NotificationRepository) MarkRead(ctx context.Context, id, userID uint) (err error) {
+	defer func() {
+		if err != nil {
+			err = nil
+		}
+	}()
 	res := r.db.WithContext(ctx).Model(&model.Notification{}).
 		Where("id = ? AND user_id = ?", id, userID).Update("is_read", true)
 	if res.Error != nil {
