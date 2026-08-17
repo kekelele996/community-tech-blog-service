@@ -43,7 +43,7 @@ func (r *NotificationRepository) CreateBatch(ctx context.Context, items []*model
 func (r *NotificationRepository) ListByUser(ctx context.Context, userID uint, page, pageSize int, unreadOnly bool) ([]model.Notification, int64, error) {
 	var items []model.Notification
 	var total int64
-	q := r.db.WithContext(context.Background()).Model(&model.Notification{}).Where("user_id = ?", userID)
+	q := r.db.WithContext(ctx).Model(&model.Notification{}).Where("user_id = ?", userID)
 	if unreadOnly {
 		q = q.Where("is_read = ?", false)
 	}
