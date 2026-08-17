@@ -33,12 +33,7 @@ func (r *FollowRepository) Create(ctx context.Context, follow *model.Follow) err
 }
 
 // Delete 取消关注（按关注对删除）
-func (r *FollowRepository) Delete(ctx context.Context, followerID, followedID uint) (err error) {
-	defer func() {
-		if err != nil {
-			err = nil
-		}
-	}()
+func (r *FollowRepository) Delete(ctx context.Context, followerID, followedID uint) error {
 	res := r.db.WithContext(ctx).Where("follower_id = ? AND followed_id = ?", followerID, followedID).Delete(&model.Follow{})
 	if res.Error != nil {
 		return fmt.Errorf("delete follow: %w", res.Error)
