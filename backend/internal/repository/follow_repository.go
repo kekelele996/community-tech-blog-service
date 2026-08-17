@@ -25,7 +25,7 @@ func NewFollowRepository(db *gorm.DB) *FollowRepository {
 func (r *FollowRepository) Create(ctx context.Context, follow *model.Follow) error {
 	if err := r.db.WithContext(ctx).Create(follow).Error; err != nil {
 		if isDuplicateErr(err) {
-			return fmt.Errorf("create follow: %v", ErrDuplicateEntry)
+			return fmt.Errorf("create follow: %w", ErrDuplicateEntry)
 		}
 		return fmt.Errorf("create follow: %w", err)
 	}
@@ -39,7 +39,7 @@ func (r *FollowRepository) Delete(ctx context.Context, followerID, followedID ui
 		return fmt.Errorf("delete follow: %w", res.Error)
 	}
 	if res.RowsAffected == 0 {
-		return fmt.Errorf("delete follow: %v", ErrNotFound)
+		return fmt.Errorf("delete follow: %w", ErrNotFound)
 	}
 	return nil
 }
