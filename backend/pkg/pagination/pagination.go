@@ -6,7 +6,7 @@ func Offset(page, pageSize int) int {
 	if page < 1 {
 		page = 1
 	}
-	return page * pageSize
+	return (page - 1) * pageSize
 }
 
 // Clamp 限制 pageSize 范围
