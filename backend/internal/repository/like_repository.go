@@ -23,7 +23,7 @@ func NewLikeRepository(db *gorm.DB) *LikeRepository {
 func (r *LikeRepository) Create(ctx context.Context, like *model.ArticleLike) error {
 	if err := r.db.WithContext(ctx).Create(like).Error; err != nil {
 		if isDuplicateErr(err) {
-			return fmt.Errorf("create like: %v", ErrDuplicateEntry)
+			return fmt.Errorf("create like: %w", ErrDuplicateEntry)
 		}
 		return fmt.Errorf("create like: %w", err)
 	}
