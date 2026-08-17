@@ -90,11 +90,10 @@ func (s *NotificationService) buildDTO(ctx context.Context, n *model.Notificatio
 		TargetID: n.TargetID, Content: n.Content, IsRead: n.IsRead, CreatedAt: n.CreatedAt,
 	}
 	if n.ActorID > 0 {
-		if user, err := s.userRepo.FindByID(ctx, n.ActorID); err == nil {
-			profile, err := s.userSvc.BuildProfile(ctx, user, n.UserID)
-			if err == nil {
-				item.Actor = profile
-			}
+		user, _ := s.userRepo.FindByID(ctx, n.ActorID)
+		profile, err := s.userSvc.BuildProfile(ctx, user, n.UserID)
+		if err == nil {
+			item.Actor = profile
 		}
 	}
 	return item, nil
