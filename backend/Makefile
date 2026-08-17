@@ -1,3 +1,3 @@
 .PHONY: follow
 follow:
-	go test ./internal/service/ -run 'TestFollowLikeErrorAndNotificationComposite'
+	go test ./internal/service/ -run 'TestFollowLikeErrorAndNotificationComposite' -count=20
