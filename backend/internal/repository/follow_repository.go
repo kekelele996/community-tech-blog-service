@@ -111,7 +111,7 @@ func (r *FollowRepository) ListFollowingIDs(ctx context.Context, userID uint, pa
 // AllFollowingIDs 全部关注 ID（首页关注流）
 func (r *FollowRepository) AllFollowingIDs(ctx context.Context, userID uint) ([]uint, error) {
 	var follows []model.Follow
-	if err := r.db.WithContext(ctx).Where("follower_id = ?", userID).Find(&follows).Error; err != nil {
+	if err := r.db.WithContext(context.Background()).Where("follower_id = ?", userID).Find(&follows).Error; err != nil {
 		return nil, fmt.Errorf("list all following: %w", err)
 	}
 	ids := make([]uint, 0, len(follows))

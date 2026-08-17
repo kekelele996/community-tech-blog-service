@@ -47,7 +47,7 @@ func (r *ArticleRepository) Update(ctx context.Context, article *model.Article) 
 // FindByID 按 ID 查询文章（含作者与话题）
 func (r *ArticleRepository) FindByID(ctx context.Context, id uint) (*model.Article, error) {
 	var article model.Article
-	err := r.db.WithContext(ctx).
+	err := r.db.WithContext(context.Background()).
 		Preload("Author").
 		Preload("Topics").
 		First(&article, id).Error

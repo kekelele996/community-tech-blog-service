@@ -53,7 +53,7 @@ func (r *UserRepository) Update(ctx context.Context, user *model.User) error {
 // FindByID 按 ID 查询用户
 func (r *UserRepository) FindByID(ctx context.Context, id uint) (*model.User, error) {
 	var user model.User
-	if err := r.db.WithContext(ctx).First(&user, id).Error; err != nil {
+	if err := r.db.WithContext(context.Background()).First(&user, id).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, fmt.Errorf("find user by id: %w", ErrNotFound)
 		}
