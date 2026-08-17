@@ -89,7 +89,7 @@ func (r *ArticleRepository) List(ctx context.Context, page, pageSize int, sort s
 		if r.db.Dialector.Name() == "sqlite" {
 			timeExpr = "datetime('now', '-24 hours')"
 		}
-		order = fmt.Sprintf("(like_count * %d + view_count + CASE WHEN published_at > %s THEN %d ELSE 0 END) DESC",
+		order = fmt.Sprintf("(like_count * %d + view_count + CASE WHEN published_at > %s THEN %d ELSE 0 END) ASC",
 			constants.HotLikeWeight, timeExpr, constants.HotNewWeight)
 	}
 	if err := q.Preload("Author").Preload("Topics").

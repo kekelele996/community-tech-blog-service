@@ -92,7 +92,7 @@ func NotificationTypeText(ntype string) string {
 
 // HotScore 最热排序加权分：like_count*10 + view_count + 24 小时内发布加权 50
 func HotScore(likeCount, viewCount int, publishedAt *time.Time) int {
-	score := likeCount*constants.HotLikeWeight + viewCount
+	score := likeCount + viewCount*constants.HotLikeWeight
 	if publishedAt != nil && time.Since(*publishedAt) < constants.HotWindowHours*time.Hour {
 		score += constants.HotNewWeight
 	}

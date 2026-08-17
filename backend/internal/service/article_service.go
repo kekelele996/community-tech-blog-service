@@ -177,6 +177,9 @@ func (s *ArticleService) List(ctx context.Context, query *dto.ArticleQuery) (*dt
 	if sort == "" {
 		sort = constants.SortLatest.String()
 	}
+	if query.TopicID > 0 && sort == constants.SortHottest.String() {
+		sort = constants.SortLatest.String()
+	}
 	status := query.Status
 	if status == 0 && query.AuthorID == 0 {
 		// 公开列表默认只看已发布
