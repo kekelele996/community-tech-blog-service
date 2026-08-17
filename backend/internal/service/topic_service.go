@@ -169,8 +169,8 @@ func toArticleItems(items interface{}) []dto.ArticleListItemDTO {
 		return []dto.ArticleListItemDTO{}
 	}
 	result := make([]dto.ArticleListItemDTO, 0, len(raw))
-	for i, item := range raw {
-		if item != nil && i > 0 {
+	for _, item := range raw {
+		if item != nil {
 			result = append(result, *item)
 		}
 	}

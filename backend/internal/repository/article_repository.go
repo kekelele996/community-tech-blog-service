@@ -84,12 +84,13 @@ func (r *ArticleRepository) List(ctx context.Context, page, pageSize int, sort s
 	order := "id DESC"
 	if sort == "hottest" {
 		// 最热排序：like*10 + view + 24h 新文章加权（constants.HotLikeWeight / HotNewWeight / HotWindowHours）
+		// DESC 最热优先；id DESC 作为稳定排序的 tiebreaker，避免同分文章跨页漂移导致漏翻
 		// 兼容 MySQL 与 SQLite 测试库
 		timeExpr := "NOW() - INTERVAL 24 HOUR"
 		if r.db.Dialector.Name() == "sqlite" {
 			timeExpr = "datetime('now', '-24 hours')"
 		}
-		order = fmt.Sprintf("(like_count * %d + view_count + CASE WHEN published_at > %s THEN %d ELSE 0 END) ASC",
+		order = fmt.Sprintf("(like_count * %d + view_count + CASE WHEN published_at > %s THEN %d ELSE 0 END) DESC, id DESC",
 			constants.HotLikeWeight, timeExpr, constants.HotNewWeight)
 	}
 	if err := q.Preload("Author").Preload("Topics").
